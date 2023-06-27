@@ -310,12 +310,6 @@ body {
   opacity: 0.8;
 }
 
-@media (max-width: 50em) {
-  .sizing {
-    width: 20em;
-  }
-}
-
 /* Success Prompt */
 
 .success {
