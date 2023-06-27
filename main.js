@@ -9,6 +9,8 @@ submitBtn.addEventListener("click", (e) => {
   ValidateEmail(emailInput.value);
 });
 
+document.addEventListener("keydown", enterSubmit);
+
 emailInput.addEventListener("click", (e) => {
   emailInput.removeAttribute("data-error");
   errortext.removeAttribute("data-error");
@@ -18,23 +20,48 @@ const dismiss = document.querySelector(".dismiss");
 const emailTemplate = document.querySelector(".email-address");
 
 dismiss.addEventListener("click", (e) => {
-  newsletter.setAttribute("data-visible", true);
-  success.setAttribute("data-visible", false);
-  container.setAttribute("data-content", "newsletter");
+  handleDismiss();
 });
 
 function ValidateEmail(email) {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-    newsletter.setAttribute("data-visible", false);
-    success.setAttribute("data-visible", true);
-    container.setAttribute("data-content", "success");
-    updateEmail(email);
+    handleSuccess(email);
+    document.removeEventListener("keydown", enterSubmit);
   } else {
-    emailInput.setAttribute("data-error", true);
-    errortext.setAttribute("data-error", true);
+    handleError();
   }
 }
 
-function updateEmail(email) {
+function handleSuccess(email) {
+  newsletter.setAttribute("data-visible", false);
+  success.setAttribute("data-visible", true);
+  container.setAttribute("data-content", "success");
   emailTemplate.innerText = email;
+  escapeDismiss();
+}
+
+function handleError() {
+  emailInput.setAttribute("data-error", true);
+  errortext.setAttribute("data-error", true);
+}
+
+function handleDismiss() {
+  newsletter.setAttribute("data-visible", true);
+  success.setAttribute("data-visible", false);
+  container.setAttribute("data-content", "newsletter");
+  document.addEventListener("keydown", enterSubmit);
+}
+
+function enterSubmit(e) {
+  if (e.key === "Enter") {
+    ValidateEmail(emailInput.value);
+  }
+}
+
+function escapeDismiss() {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      handleDismiss();
+    }
+  });
 }
