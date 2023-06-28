@@ -37,7 +37,7 @@ function handleSuccess(email) {
   success.setAttribute("data-visible", true);
   container.setAttribute("data-content", "success");
   emailTemplate.innerText = email;
-  escapeDismiss();
+  document.addEventListener("keydown", escapeDismiss);
 }
 
 function handleError() {
@@ -49,6 +49,7 @@ function handleDismiss() {
   newsletter.setAttribute("data-visible", true);
   success.setAttribute("data-visible", false);
   container.setAttribute("data-content", "newsletter");
+  document.removeEventListener("keydown", escapeDismiss);
   document.addEventListener("keydown", enterSubmit);
 }
 
@@ -58,10 +59,8 @@ function enterSubmit(e) {
   }
 }
 
-function escapeDismiss() {
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      handleDismiss();
-    }
-  });
+function escapeDismiss(e) {
+  if (e.key === "Escape") {
+    handleDismiss();
+  }
 }
